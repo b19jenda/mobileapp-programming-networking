@@ -15,6 +15,7 @@ import android.widget.ListView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONStringer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,11 +29,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private String[] test = {"he"};
+    private ArrayList<String> listData = new ArrayList<>(Arrays.asList(test));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if(id == R.id.action_refresh){
             new JsonTask().execute();
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.list_item_textview,R.id.list_item_textview,listData);
+            ListView list_view =(ListView)findViewById(R.id.list_view);
+            list_view.setAdapter(adapter);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected String doInBackground(String... params) {
             try {
-                URL url = new URL("https://wwwlab.iit.his.se/brom/kurser/mobilprog/jsonservice.php");
+                URL url = new URL("https://wwwlab.iit.his.se/brom/kurser/mobilprog/dbservice/admin/getdataasjson.php?type=brom");
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
 
@@ -98,11 +105,14 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d("hej","Data:"+s);
             try {
-                JSONObject json1 = new JSONObject(s);
+                JSONArray json1 = new JSONArray(s);
                 //Log.d("hej","Get:"+json1);
-                JSONArray a = json1.getJSONArray("object");
-
-               // String age = json1.getString("name");
+                for(int i=0; i < json1.length() ; i++) {
+                    JSONObject json_data = json1.getJSONObject(i);
+                    String id=json_data.getString("ID");
+                    String name=json_data.getString("name");
+                    Log.d(name,"Output");
+                }
 
             } catch (JSONException e) {
                 Log.e("brom","E:"+e.getMessage());
