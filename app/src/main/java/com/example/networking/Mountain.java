@@ -15,6 +15,13 @@ public class Mountain {
         location=l;
         height=i;
     }
+
+    public String info(){
+        String text = new String();
+        text+="Berget "+name+" är "+height+" meter högt och ligger i bergkedjan "+location;
+        return text;
+    }
+
     @Override
     public String toString(){
         return name;
