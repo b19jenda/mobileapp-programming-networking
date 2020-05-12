@@ -29,19 +29,19 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private String[] test = {"he"};
-    private ArrayList<String> listData = new ArrayList<>(Arrays.asList(test));
-
+    private ArrayList<Mountain> listData = new ArrayList<>();
+    ArrayAdapter<Mountain> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        adapter = new ArrayAdapter<Mountain>(this,R.layout.list_item_textview,R.id.list_item_textview,listData);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.game_menu, menu);
+
         return true;
     }
 
@@ -51,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if(id == R.id.action_refresh){
-            new JsonTask().execute();
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.list_item_textview,R.id.list_item_textview,listData);
             ListView list_view =(ListView)findViewById(R.id.list_view);
             list_view.setAdapter(adapter);
+            new JsonTask().execute();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -109,10 +108,13 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("hej","Get:"+json1);
                 for(int i=0; i < json1.length() ; i++) {
                     JSONObject json_data = json1.getJSONObject(i);
-                    String id=json_data.getString("ID");
                     String name=json_data.getString("name");
-                    Log.d(name,"Output");
+                    String location=json_data.getString("location");
+                    int height=json_data.getInt("size");
+                    Log.d("hej2",name);
+                    listData.add(new Mountain(name,location,height));
                 }
+                adapter.notifyDataSetChanged();
 
             } catch (JSONException e) {
                 Log.e("brom","E:"+e.getMessage());
