@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,11 +34,15 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Mountain> listData = new ArrayList<>();
     ArrayAdapter<Mountain> adapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         adapter = new ArrayAdapter<Mountain>(this,R.layout.list_item_textview,R.id.list_item_textview,listData);
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
             ListView list_view =(ListView)findViewById(R.id.list_view);
             list_view.setAdapter(adapter);
             new JsonTask().execute();
+
+            list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(getApplicationContext(),"hej",Toast.LENGTH_SHORT).show();
+                }
+            });
             return true;
         }
         return super.onOptionsItemSelected(item);

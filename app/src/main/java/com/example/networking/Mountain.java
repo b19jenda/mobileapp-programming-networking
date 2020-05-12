@@ -15,4 +15,8 @@ public class Mountain {
         location=l;
         height=i;
     }
+    @Override
+    public String toString(){
+        return name;
+    }
 }
